@@ -55,3 +55,73 @@ form button:hover { background-color: #0056b3; }
 .tag-priority-Crítica { background-color: #bf2600; } .tag-priority-Alta { background-color: #ff5630; } .tag-priority-Média { background-color: #ffab00; } .tag-priority-Baixa { background-color: #36b37e; }
 .tag-status { background-color: #6c757d; }
 .tag-funcional { background-color: #007bff; } .tag-nao-funcional { background-color: #6f42c1; } .tag-historia-de-usuario { background-color: #28a745; } .tag-regra-de-negocio { background-color: #fd7e14; }
+
+
+
+/* Adicione este bloco de código ao FINAL do seu style.css */
+
+/* --- REGRAS PARA DISPOSITIVOS MÓVEIS (RESPONSIVIDADE) --- */
+@media (max-width: 768px) {
+
+    /* Ajustes Gerais */
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+    
+    /* Faz o container principal ocupar toda a largura */
+    .container {
+        flex-direction: column; /* Empilha os itens verticalmente */
+        gap: 20px;
+        padding: 0;
+    }
+
+    /* Ajustes na tela de Projetos e Modelos */
+    #projects-view, #templates-view {
+        padding: 10px;
+    }
+    
+    .form-container, .list-container {
+        width: 100%;
+        box-sizing: border-box; /* Garante que o padding não estoure a largura */
+    }
+
+    /* Ajustes no Painel Kanban */
+    #kanban-board {
+        /* Habilita o scroll horizontal */
+        overflow-x: auto;
+        /* Garante que o conteúdo não quebre a linha, forçando o scroll */
+        white-space: nowrap;
+        /* Adiciona um espaçamento inferior para a barra de rolagem não cortar os cards */
+        padding-bottom: 15px; 
+        /* Alinha as colunas no início do container de rolagem */
+        justify-content: flex-start;
+    }
+
+    .kanban-column {
+        /* Impede que as colunas encolham */
+        flex-shrink: 0;
+        /* Opcional: podemos diminuir um pouco a largura no mobile */
+        width: 260px;
+    }
+    
+    /* Ajustes nos Modais */
+    .modal-content {
+        width: 90%;
+        margin: 15% auto; /* Diminui a margem superior */
+        padding: 15px 20px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr; /* Empilha os detalhes no modal de visualização */
+    }
+
+    /* Ajustes nos botões de navegação do header */
+    .back-button, .header-button {
+        padding: 6px 10px;
+        font-size: 0.8em;
+    }
+}
