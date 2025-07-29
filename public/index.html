@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReqFlow</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-view">
+        <div class="auth-container">
+            <h2>ReqFlow Login</h2>
+            <form id="login-form">
+                <label for="login-username">Usuário:</label>
+                <input type="text" id="login-username" required>
+                <label for="login-password">Senha:</label>
+                <input type="password" id="login-password" required>
+                <button type="submit">Entrar</button>
+                <p class="auth-switch">Não tem uma conta? <a href="#" id="show-register">Registre-se</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="register-view" style="display: none;">
+        <div class="auth-container">
+            <h2>Registrar no ReqFlow</h2>
+            <form id="register-form">
+                <label for="register-username">Escolha um usuário:</label>
+                <input type="text" id="register-username" required>
+                <label for="register-password">Crie uma senha:</label>
+                <input type="password" id="register-password" required>
+                <button type="submit">Criar Conta</button>
+                <p class="auth-switch">Já tem uma conta? <a href="#" id="show-login">Faça o login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="app-view" style="display: none;">
+        <nav class="navbar">
+            <div class="navbar-brand">ReqFlow</div>
+            <div class="navbar-user">
+                <span id="username-display"></span>
+                <button id="logout-btn">Sair</button>
+            </div>
+        </nav>
+
+        <div id="projects-view">
+            <header>
+                <h1>Meus Projetos</h1>
+                <button id="manage-templates-btn" class="header-button">Gerenciar Modelos</button>
+            </header>
+            <main class="container">
+                <div class="form-container">
+                    <h2>Criar Novo Projeto</h2>
+                    <form id="add-project-form">
+                        <label for="nome">Nome do Projeto:</label>
+                        <input type="text" id="nome" required>
+                        <label for="descricao">Descrição:</label>
+                        <textarea id="descricao" rows="2"></textarea>
+                        <label for="template">Iniciar com um modelo:</label>
+                        <select id="template"><option value="">Nenhum (Em Branco)</option></select>
+                        <button type="submit">Criar Projeto</button>
+                    </form>
+                </div>
+                <div class="list-container">
+                    <h2>Selecionar Projeto</h2>
+                    <ul id="projects-list"></ul>
+                </div>
+            </main>
+        </div>
+
+        <div id="templates-view" style="display: none;">
+            <header>
+                <h1>Gerenciar Modelos</h1>
+                <button id="back-to-projects-from-templates" class="back-button">← Voltar</button>
+            </header>
+            <main class="container">
+                <div class="list-container full-width">
+                    <h2>Modelos Salvos</h2>
+                    <ul id="templates-list"></ul>
+                </div>
+            </main>
+        </div>
+
+        <div id="kanban-view" style="display: none;">
+            <header>
+                <h1 id="kanban-project-title"></h1>
+                <button id="back-to-projects" class="back-button">← Voltar</button>
+            </header>
+            <div class="actions-container">
+                <button id="add-req-btn" class="add-button">+ Adicionar Requisito</button>
+                <button id="save-as-template-btn" class="secondary-button">Salvar como Modelo</button>
+            </div>
+            <main id="kanban-board"></main>
+        </div>
+    </div>
+
+    <div id="add-req-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Novo Requisito</h2>
+            <form id="add-req-form">
+                <label for="req-titulo">Título:</label>
+                <input type="text" id="req-titulo" required>
+                <label for="req-descricao">Descrição:</label>
+                <textarea id="req-descricao" rows="4" required></textarea>
+                <label for="req-tipo">Tipo:</label>
+                <select id="req-tipo">
+                    <option value="Funcional">Funcional</option>
+                    <option value="Não Funcional">Não Funcional</option>
+                    <option value="História de Usuário">História de Usuário</option>
+                    <option value="Regra de Negócio">Regra de Negócio</option>
+                </select>
+                <label for="req-prioridade">Prioridade:</label>
+                <select id="req-prioridade">
+                    <option value="Crítica">Crítica</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Média">Média</option>
+                    <option value="Baixa">Baixa</option>
+                </select>
+                <button type="submit">💾 Salvar Requisito</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="view-req-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn view-close-btn">&times;</span>
+            <h2 id="view-req-title"></h2>
+            <div class="details-grid">
+                <div>
+                    <strong>Descrição</strong>
+                    <p id="view-req-description"></p>
+                </div>
+                <div>
+                    <strong>Status</strong>
+                    <p><span id="view-req-status" class="card-tag"></span></p>
+                    <strong>Prioridade</strong>
+                    <p><span id="view-req-priority" class="card-tag"></span></p>
+                    <strong>Tipo</strong>
+                    <p><span id="view-req-type" class="card-tag"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn edit-project-close-btn">&times;</span>
+            <h2>Editar Projeto</h2>
+            <form id="edit-project-form">
+                <label for="edit-project-nome">Nome do Projeto:</label>
+                <input type="text" id="edit-project-nome" required>
+                <label for="edit-project-descricao">Descrição:</label>
+                <textarea id="edit-project-descricao" rows="2"></textarea>
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="save-template-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn save-template-close-btn">&times;</span>
+            <h2>Salvar como Modelo</h2>
+            <form id="save-template-form">
+                <label for="template-name">Nome do Novo Modelo:</label>
+                <input type="text" id="template-name" required>
+                <button type="submit">💾 Salvar Modelo</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-template-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn edit-template-close-btn">&times;</span>
+            <h2>Editar Modelo</h2>
+            <form id="edit-template-form">
+                <label for="edit-template-name">Nome do Modelo:</label>
+                <input type="text" id="edit-template-name" required>
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

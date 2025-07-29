@@ -1,0 +1,36 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  # Serviço do Banco de Dados MySQL
+  db:
+    image: mysql:8
+    container_name: reqflow_mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Puxa do arquivo .env
+      MYSQL_DATABASE: ${DB_NAME}         # Puxa do arquivo .env
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      # Expõe a porta do MySQL para o seu computador (opcional, bom para debugar)
+      - "3307:3306"
+
+  # Serviço da Aplicação Node.js
+  app:
+    container_name: reqflow_app
+    restart: always
+    # Constrói a imagem a partir do Dockerfile no diretório atual
+    build: .
+    ports:
+      - "3000:3000"
+    # Carrega as variáveis de ambiente do arquivo .env
+    env_file:
+      - ./.env
+    # Garante que o serviço 'db' inicie antes do serviço 'app'
+    depends_on:
+      - db
+
+volumes:
+  db_data:
