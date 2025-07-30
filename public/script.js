@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveTemplateForm = document.getElementById('save-template-form');
     const editTemplateForm = document.getElementById('edit-template-form');
 
+    const exportTxtBtn = document.getElementById('export-txt-btn'); // NOVO ELEMENTO
+
+
     // --- 2. VARIÁVEIS DE ESTADO ---
     let currentProjectId = null;
     let editingProjectId = null;
@@ -101,7 +104,63 @@ document.addEventListener('DOMContentLoaded', () => {
     showLoginLink.addEventListener('click', e => { e.preventDefault(); loginView.style.display = 'block'; registerView.style.display = 'none'; });
     [addReqModal, viewReqModal, editProjectModal, saveTemplateModal, editTemplateModal].forEach(m => { if (m) m.querySelector('.close-btn').onclick = () => m.style.display = 'none'; });
     window.onclick = e => { [addReqModal, viewReqModal, editProjectModal, saveTemplateModal, editTemplateModal].forEach(m => { if (e.target == m) m.style.display = 'none'; }); };
+//
+     // NOVO LISTENER PARA O BOTÃO DE EXPORTAR
+    exportTxtBtn.addEventListener('click', async () => {
+        if (!currentProjectId) {
+            alert('Nenhum projeto selecionado.');
+            return;
+        }
 
+        // Busca os dados do projeto e dos requisitos
+        const projectResponse = await api.request(`/api/projects`);
+        const reqsResponse = await api.request(`/api/projects/${currentProjectId}/requirements`);
+
+        if (!projectResponse.ok || !reqsResponse.ok) {
+            alert('Não foi possível carregar os dados para exportação.');
+            return;
+        }
+
+        const projects = await projectResponse.json();
+        const requirements = await reqsResponse.json();
+        
+        const currentProject = projects.find(p => p.id === currentProjectId);
+        const projectName = currentProject ? currentProject.nome : 'projeto';
+
+        // Formata o conteúdo do arquivo de texto
+        let fileContent = `Projeto: ${projectName}\n`;
+        fileContent += `Descrição: ${currentProject.descricao || 'Nenhuma'}\n`;
+        fileContent += "===================================================\n\n";
+
+        colunasStatus.forEach(status => {
+            fileContent += `--- STATUS: ${status.toUpperCase()} ---\n\n`;
+            const reqsInStatus = requirements.filter(r => r.status === status);
+            
+            if (reqsInStatus.length === 0) {
+                fileContent += "\t(Nenhum requisito nesta etapa)\n\n";
+            } else {
+                reqsInStatus
+                    .sort((a,b) => priorityOrder[a.prioridade] - priorityOrder[b.prioridade])
+                    .forEach(req => {
+                        fileContent += `[${req.prioridade}] ${req.titulo}\n`;
+                        fileContent += `\t- Tipo: ${req.tipo}\n`;
+                        fileContent += `\t- Descrição: ${req.descricao.replace(/\n/g, '\n\t  ')}\n\n`;
+                    });
+            }
+        });
+        
+        // Função para iniciar o download
+        const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const safeFileName = projectName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        link.setAttribute('href', url);
+        link.setAttribute('download', `requisitos_${safeFileName}.txt`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    });
     // --- 7. INICIALIZAÇÃO ---
     updateUI();
 });
