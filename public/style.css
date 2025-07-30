@@ -62,13 +62,11 @@ form button:hover { background-color: #0056b3; }
 .tag-priority-Média { background-color: #ffab00; color: #172b4d; } /* Cor do texto escura para legibilidade */
 .tag-priority-Baixa { background-color: #36b37e; color: white; }
 
-.tag-status { background-color: #6c757d; color: white; }
-
-.tag-funcional { background-color: #007bff; color: white; }
-.tag-nao-funcional { background-color: #6f42c1; color: white; }
-.tag-historia-de-usuario { background-color: #28a745; color: white; }
-.tag-regra-de-negocio { background-color: #fd7e14; color: white; }
-
+/* --- Cores para as Tags de Status (NOVO) --- */
+.tag-status-a-levantar { background-color: #dc3545; color: white; }
+.tag-status-em-analise { background-color: #ffc107; color: #172b4d; }
+.tag-status-aprovado { background-color: #198754; color: white; }
+.tag-status-concluido { background-color: #0d6efd; color: white; }
 
 /* Adicione este bloco de código ao FINAL do seu style.css */
 
